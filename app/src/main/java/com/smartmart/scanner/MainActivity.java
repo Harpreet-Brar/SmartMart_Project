@@ -10,6 +10,8 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReaderFrag
     private static final int REQUEST = 1208;
     private TextView title;
     private TextView detail;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReaderFrag
         setContentView(R.layout.activity_main);
         title = findViewById(R.id.scan_title);
         detail = findViewById(R.id.scan_detail);
-
+        button = findViewById(R.id.scan_button);
+        button.setVisibility(View.INVISIBLE);
         addBarcodeReaderFragment();
     }
 
@@ -73,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReaderFrag
         Toast.makeText(this, barcode.rawValue, Toast.LENGTH_SHORT).show();
         title.setText("Barcode value from fragment");
         detail.setText(barcode.rawValue);
+
+        button.setVisibility(View.VISIBLE);
     }
     @Override
     public void onScannedMultiple(List<Barcode> barcodes) {
