@@ -19,7 +19,7 @@ import com.smartmart.scanner_module.BarcodeReaderFragment;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener {
+public class MainActivity extends AppCompatActivity implements BarcodeReaderFragment.BarcodeReaderListener {
     private static final int REQUEST = 1208;
     private TextView title;
     private TextView detail;
@@ -28,9 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.scan_button).setOnClickListener(this);
         title = findViewById(R.id.scan_title);
         detail = findViewById(R.id.scan_detail);
+
+        addBarcodeReaderFragment();
     }
 
     private void addBarcodeReaderFragment() {
@@ -42,24 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.scan_button:
-                addBarcodeReaderFragment();
-                break;
-          /*  case R.id.btn_activity:
-                FragmentManager supportFragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-                Fragment fragmentById = supportFragmentManager.findFragmentById(R.id.fm_container);
-                if (fragmentById != null) {
-                    fragmentTransaction.remove(fragmentById);
-                }
-                fragmentTransaction.commitAllowingStateLoss();
-                launchBarCodeActivity();
-                break;*/
-        }
-    }
 
 
     private void launchBarCodeActivity() {
@@ -68,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -92,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         title.setText("Barcode value from fragment");
         detail.setText(barcode.rawValue);
     }
-
     @Override
     public void onScannedMultiple(List<Barcode> barcodes) {
 
