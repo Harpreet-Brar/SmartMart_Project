@@ -18,19 +18,14 @@ import android.widget.Toast;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.smartmart.scanner_module.BarcodeScannerActivity;
 import com.smartmart.scanner_module.BarcodeReaderFragment;
-import com.smartmart.scanner.Cart;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener {
+public class MainActivity extends AppCompatActivity implements BarcodeReaderFragment.BarcodeReaderListener {
     private static final int REQUEST = 1208;
     private TextView title;
     private TextView detail;
     private Button button;
-    Cart cart = new Cart();
-    ArrayList<String> items = new ArrayList<>();
-    Integer count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         detail = findViewById(R.id.scan_detail);
         button = findViewById(R.id.scan_button);
         button.setVisibility(View.INVISIBLE);
-
-
         addBarcodeReaderFragment();
     }
 
@@ -86,10 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         detail.setText(barcode.rawValue);
 
         button.setVisibility(View.VISIBLE);
-        button.setOnClickListener(this);
     }
-
-
     @Override
     public void onScannedMultiple(List<Barcode> barcodes) {
 
@@ -121,17 +111,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(getApplicationContext(), Cart.class);
         startActivity(intent);
         return true;
-    }
-
-
-    @Override
-    public void onClick(View view)
-    {
-        switch (view.getId()) {
-            case R.id.scan_button:
-                count = count+ 1;
-                String val = "item";
-                cart.addItems(val);
-        }
     }
 }
