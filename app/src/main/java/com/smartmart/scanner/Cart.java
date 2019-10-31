@@ -15,7 +15,7 @@ public class Cart extends AppCompatActivity {
 
     ArrayAdapter adapter;
     ListView listView;
-    ArrayList<String> itemlist = new ArrayList<>();
+    static ArrayList<String> itemlist = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

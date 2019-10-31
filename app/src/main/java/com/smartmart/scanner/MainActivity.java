@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView title;
     private TextView detail;
     private Button button;
+    String reslt;
     Cart cart = new Cart();
     ArrayList<String> items = new ArrayList<>();
     Integer count = 0;
@@ -72,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (requestCode == REQUEST && data != null) {
             Barcode barcode = data.getParcelableExtra(BarcodeScannerActivity.KEY_CAPTURED_BARCODE);
-            Toast.makeText(this, barcode.rawValue, Toast.LENGTH_SHORT).show();
+
             title.setText("On Activity Result");
             detail.setText(barcode.rawValue);
+            reslt = barcode.rawValue;
         }
 
     }
@@ -130,8 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.scan_button:
                 count = count+ 1;
-                String val = "item";
-                cart.addItems(val);
+                cart.addItems(reslt);
         }
     }
 }
