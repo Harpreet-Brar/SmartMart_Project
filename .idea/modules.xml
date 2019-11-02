@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartMart-99bd2587df8fac7a2d479e1fca560dbdc27e0544.iml" filepath="$PROJECT_DIR$/SmartMart-99bd2587df8fac7a2d479e1fca560dbdc27e0544.iml" />
       <module fileurl="file://$PROJECT_DIR$/SmartMart-master.iml" filepath="$PROJECT_DIR$/SmartMart-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/SmartMart-master-app.iml" filepath="$PROJECT_DIR$/app/SmartMart-master-app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/barcode-reader/SmartMart-master-barcode-reader.iml" filepath="$PROJECT_DIR$/barcode-reader/SmartMart-master-barcode-reader.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/barcode-reader/barcode-reader.iml" filepath="$PROJECT_DIR$/barcode-reader/barcode-reader.iml" />
     </modules>

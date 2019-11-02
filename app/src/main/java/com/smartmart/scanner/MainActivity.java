@@ -11,14 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
+import com.smartmart.scanner.ui.home.HomeFragment;
 import com.smartmart.scanner_module.BarcodeScannerActivity;
 import com.smartmart.scanner_module.BarcodeReaderFragment;
-import com.smartmart.scanner.Cart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST = 1208;
     private TextView title;
     private TextView detail;
-    private Button button;
+    private Button Scanbutton;
+    private Button ScantohomeButton;
     String reslt;
     Cart cart = new Cart();
     ArrayList<String> items = new ArrayList<>();
@@ -39,8 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         title = findViewById(R.id.scan_title);
         detail = findViewById(R.id.scan_detail);
-        button = findViewById(R.id.scan_button);
-        button.setVisibility(View.INVISIBLE);
+        Scanbutton = findViewById(R.id.scan_button);
+        Scanbutton.setVisibility(View.INVISIBLE);
+
 
 
         addBarcodeReaderFragment();
@@ -87,8 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         title.setText("Barcode value from fragment");
         detail.setText(barcode.rawValue);
 
-        button.setVisibility(View.VISIBLE);
-        button.setOnClickListener(this);
+        Scanbutton.setVisibility(View.VISIBLE);
+        Scanbutton.setOnClickListener(this);
     }
 
 
@@ -133,6 +134,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.scan_button:
                 count = count+ 1;
                 cart.addItems(reslt);
+                break;
         }
     }
 }
+
+
+

@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <fragment
-        android:id="@+id/barcode_fragment"
-        android:name="com.smartmart.scanner_module.BarcodeReaderFragment"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="415dp"
+        android:layout_height="358dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <fragment
+            android:id="@+id/barcode_fragment"
+            android:name="com.smartmart.scanner_module.BarcodeReaderFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:auto_focus="true"
+            app:use_flash="false" />
+
+        <com.smartmart.scanner_module.ScannerOverlay
+            android:layout_width="match_parent"
+            android:layout_height="386dp"
+            android:background="#44000000"
+            app:line_color="#7323DC"
+            app:line_speed="6"
+            app:line_width="5"
+            app:square_height="250"
+            app:square_width="250" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/scan_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:auto_focus="true"
-        app:use_flash="false" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-    <com.smartmart.scanner_module.ScannerOverlay
+    <Button
+        android:id="@+id/scan_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#44000000"
-        app:line_color="#7323DC"
-        app:line_speed="6"
-        app:line_width="5"
-        app:square_height="250"
-        app:square_width="250" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="ADD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scan_detail" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
