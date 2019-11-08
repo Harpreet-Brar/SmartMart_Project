@@ -6,6 +6,6 @@
         android:id="@+id/cart"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        android:icon="@drawable/bagg"
+        android:icon="@drawable/cart"
         app:showAsAction="always" />
 </menu>

@@ -3,13 +3,17 @@
     <string name="edit">EDIT</string>
     <string name="add">ADD</string>
     <string name="action_settings">CART</string>
-    <string name="title_activity_bottom_nav">BottomNav</string>
+    <string name="title_activity_bottom_nav">SMARTMART</string>
     <string name="title_home">Home</string>
     <string name="title_account">Account</string>
     <string name="title_receipt">Receipt</string>
     <string name="title_scanner">Scan</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="account_name">Name</string>
+    <string name="account_email">Email@provider.com</string>
+    <string name="account_logout">LOGOUT</string>
+    <string name="account_image_description">Profile picture of user</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">SAVE</string>
+    <string name="title_cart">CART</string>
 
 </resources>

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_account">
+    app:startDestination="@+id/navigation_scanner">
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.smartmart.scanner.BarcodeFragment"
+        android:name="com.smartmart.scanner.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
@@ -22,9 +22,15 @@
         android:name="com.smartmart.scanner.ui.receipt.ReceiptFragment"
         android:label="@string/title_receipt"
         tools:layout="@layout/fragment_receipt" />
-    <activity
+    <fragment
         android:id="@+id/navigation_scanner"
         android:name="com.smartmart.scanner.MainActivity"
         android:label="@string/title_scanner"
         tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/navigation_cart"
+        android:name="com.smartmart.scanner.Cart"
+        android:label="@string/title_cart"
+        tools:layout="@layout/activity_cart" />
+
 </navigation>

@@ -16,4 +16,69 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/AccountPic"
+        android:layout_width="131dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="@string/account_image_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <EditText
+        android:id="@+id/AccountName"
+        style="@android:style/Widget.DeviceDefault.Light.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:autofillHints="@string/account_name"
+        android:backgroundTint="#00020A"
+        android:breakStrategy="simple"
+        android:contextClickable="false"
+        android:ems="10"
+        android:foregroundTint="@color/colorAccent"
+        android:inputType="textPersonName"
+        android:labelFor="@id/AccountName"
+        android:outlineProvider="paddedBounds"
+        android:singleLine="true"
+        android:text="@string/account_name"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AccountPic" />
+
+    <EditText
+        android:id="@+id/AccountEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:autofillHints="@string/account_email"
+        android:backgroundTint="#00020A"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:labelFor="@id/AccountEmail"
+        android:text="@string/account_email"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AccountName" />
+
+    <Button
+        android:id="@+id/AccountLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/account_logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AccountEmail" />
+
 </android.support.constraint.ConstraintLayout>

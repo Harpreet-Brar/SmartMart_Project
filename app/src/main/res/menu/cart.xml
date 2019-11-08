@@ -6,4 +6,8 @@
         android:id="@+id/edit"
         android:title="@string/edit"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/save"
+        android:title="@string/save"
+        app:showAsAction="always" />
 </menu>
