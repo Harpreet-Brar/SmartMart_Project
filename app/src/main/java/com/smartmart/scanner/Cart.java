@@ -1,5 +1,6 @@
 package com.smartmart.scanner;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,8 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         listView = findViewById(R.id.list_view);
         Button payButton = findViewById(R.id.payButton);
         payButton.setOnClickListener(this);
+        Button cancelButton = findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(this);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemlist);
         listView.setAdapter(adapter);
 
@@ -86,6 +89,12 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_button:
+                break;
+            case R.id.cancelButton:
+
+                Intent i = new Intent(getApplicationContext(), BottomNav.class);
+                startActivity(i);
+                break;
 
         }
     }
