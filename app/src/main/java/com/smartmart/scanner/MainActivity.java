@@ -1,12 +1,15 @@
 package com.smartmart.scanner;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -16,26 +19,34 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.smartmart.scanner.Cart;
+import com.smartmart.scanner.Request;
 import com.smartmart.scanner_module.BarcodeScannerActivity;
 import com.smartmart.scanner_module.BarcodeReaderFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Fragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener {
+public class MainActivity extends Fragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener{
     private static final int REQUEST = 1208;
-    private TextView title;
-    private TextView detail;
+    public static TextView title;
+    public static TextView detail;
     private Button Scanbutton;
+    private Button plus;
+    private Button minus;
+    public static TextView countitem;
+
     private Button ScantohomeButton;
     private View view;
     private FragmentActivity myContext;
     static String reslt;
+    private ConstraintLayout defaulttext;
+    private ConstraintLayout iteminfo;
+
     Cart cart = new Cart();
     ArrayList<String> items = new ArrayList<>();
     Integer count = 0;
@@ -54,9 +65,19 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         title = view.findViewById(R.id.scan_title);
         detail = view.findViewById(R.id.scan_detail);
         Scanbutton = view.findViewById(R.id.scan_button);
-        Scanbutton.setVisibility(View.INVISIBLE);
+        countitem = view.findViewById(R.id.countitem);
+        plus = view.findViewById(R.id.pluscount);
+        minus = view.findViewById(R.id.minuscount);
+        iteminfo = view.findViewById(R.id.selectitem);
+        defaulttext = view.findViewById(R.id.defaultview);
+        iteminfo.setVisibility(View.INVISIBLE);
+        defaulttext.setVisibility(View.VISIBLE);
 
 
+Request.Request("1");
+        Scanbutton.setOnClickListener(this);
+
+        //detail.setText(newList.get(1).toString());
 
         addBarcodeReaderFragment();
         return view;
@@ -105,10 +126,13 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
 
     @Override
     public void onScanned(Barcode barcode) {
-        title.setText("Barcode value from fragment");
-        detail.setText(barcode.rawValue);
-        Scanbutton.setVisibility(View.VISIBLE);
+        Request.Request(barcode.rawValue);
+
+        iteminfo.setVisibility(View.VISIBLE);
+        defaulttext.setVisibility(View.INVISIBLE);
         Scanbutton.setOnClickListener(this);
+        plus.setOnClickListener(this);
+        minus.setOnClickListener(this);
     }
 
 
@@ -132,14 +156,30 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         Toast.makeText(myContext, "Camera permission denied!", Toast.LENGTH_LONG).show();
     }
 
-   
 
+
+    @SuppressLint("ResourceType")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_button:
-                count = count+ 1;
-                cart.addItems(reslt.toString());
+                String nameitem = title.getText().toString();
+                //cart.addItems(nameitem,Value);
+                title.setText("");
+                defaulttext.setVisibility(View.VISIBLE);
+                iteminfo.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.pluscount:
+                int count = Integer.parseInt(countitem.getText().toString());
+                int xx = count+1;
+                countitem.setText(Integer.toString(xx));
+                break;
+            case R.id.minuscount:
+                int countnew = Integer.parseInt(countitem.getText().toString());
+                int x = countnew+1;
+                countitem.setText(x);
+                break;
+
         }
     }
 

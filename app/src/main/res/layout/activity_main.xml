@@ -1,65 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:textAlignment="center">
 
     <FrameLayout
         android:id="@+id/fm_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="4dp"
-        android:layout_weight=".6"
+        android:layout_height="270dp"
         android:background="#00BCD4"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/defaultview"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/roundcorner"
+        android:orientation="vertical"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fm_container">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="28dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cart" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="40dp"
+            android:text="Add items here"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/selectitem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:layout_weight=".4"
-        android:orientation="vertical">
+        android:layout_height="250dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/cardview"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fm_container">
 
 
         <TextView
             android:id="@+id/scan_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight=".2"
+            android:layout_marginTop="36dp"
             android:textAlignment="center"
             android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/scan_detail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight=".6"
+            android:layout_marginTop="8dp"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scan_title" />
+
+        <Button
+            android:id="@+id/minuscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#ffffff"
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="@id/countitem"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scan_detail" />
+
+
+        <EditText
+            android:id="@+id/countitem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/borderview"
+            android:enabled="false"
+            android:inputType="number"
+            android:outlineProvider="bounds"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="@id/pluscount"
+            app:layout_constraintStart_toStartOf="@id/minuscount"
+            app:layout_constraintTop_toBottomOf="@id/scan_detail" />
+
+        <Button
+            android:id="@+id/pluscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#ffffff"
+            android:text="+"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/countitem"
+            app:layout_constraintTop_toBottomOf="@id/scan_detail" />
 
         <Button
             android:id="@+id/scan_button"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight=".1"
-            android:text="@string/add"
-            android:textAlignment="center" />
+            android:background="#d79d6d"
+            android:text="Confirm"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <view
-            android:id="@+id/view"
-            class="android.support.v7.widget.ActionMenuView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".2" />
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

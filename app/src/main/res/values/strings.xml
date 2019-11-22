@@ -7,7 +7,7 @@
     <string name="title_home">Home</string>
     <string name="title_account">Account</string>
     <string name="title_receipt">Receipt</string>
-    <string name="title_scanner">Scan</string>
+    <string name="title_scanner">SMARTMART</string>
     <string name="account_name">Name</string>
     <string name="account_email">Email@provider.com</string>
     <string name="account_logout">LOGOUT</string>
@@ -15,6 +15,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save">SAVE</string>
     <string name="title_cart">CART</string>
-    <string name="pay">PAY</string>
+    <string name="pay">Continue to pay</string>
 
 </resources>

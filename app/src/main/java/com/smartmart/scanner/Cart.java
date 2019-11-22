@@ -42,6 +42,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     private MenuItem menuItem;
     private MenuItem newmenuItem;
     static ArrayList<String> itemlist = new ArrayList<>();
+    static Double totalbill = 0.0;
 
     protected void onDestroy(){
         stopService(new Intent(this,PayPalService.class));
@@ -116,10 +117,10 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         return true;
     }
 
-    public void addItems(String item){
-//        itemlist.add(item);
-        Log.d("test", item);
-
+    public static void addItems(String item1, Double item2){
+        itemlist.add(item1+"                                                                        "+item2);
+        totalbill = item2+totalbill;
+        Log.d("aa",totalbill.toString());
     }
 
     @Override
@@ -136,7 +137,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     //new code
     private void processPayment(){
         //amount =  edtamount.getText().toString();
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(10)), "USD",
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(0.67)), "CAD",
                 "pay now" ,PayPalPayment.PAYMENT_INTENT_SALE);
 
         Intent intent = new Intent(this, PaymentActivity.class);
