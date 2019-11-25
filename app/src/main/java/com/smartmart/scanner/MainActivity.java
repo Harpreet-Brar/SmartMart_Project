@@ -2,6 +2,7 @@ package com.smartmart.scanner;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,9 +25,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.smartmart.scanner.ui.account.AccountFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 public class MainActivity extends Fragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener{
     private static final int REQUEST = 1208;
@@ -37,16 +46,15 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
     private Button minus;
     public static TextView countitem;
 
-    private Button ScantohomeButton;
     private View view;
     private FragmentActivity myContext;
     static String reslt;
     private ConstraintLayout defaulttext;
     private ConstraintLayout iteminfo;
-    private static String Iname;
-    private static Double Iprice;
+    public static String name;
+    public static Double price;
+    public static Integer quantity;
     Cart cart = new Cart();
-    ArrayList<String> items = new ArrayList<>();
     Integer count = 0;
 
     @Override
@@ -70,11 +78,7 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         defaulttext = view.findViewById(R.id.defaultview);
         iteminfo.setVisibility(View.INVISIBLE);
         defaulttext.setVisibility(View.VISIBLE);
-
-
         Scanbutton.setOnClickListener(this);
-
-        //detail.setText(newList.get(1).toString());
 
         addBarcodeReaderFragment();
         return view;
@@ -95,13 +99,6 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-
-
-    private void launchBarCodeActivity() {
-        Intent launchIntent = BarcodeScannerActivity.getLaunchIntent(myContext, true, false);
-        startActivityForResult(launchIntent, REQUEST);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -119,22 +116,26 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
 
     }
 
+
     @Override
     public void onScanned(Barcode barcode) {
-        Request.Request(barcode.rawValue);
-        title.setText(Iname);
-        detail.setText(String.valueOf(Iprice));
+        Request(barcode.rawValue);
         Log.d("aa", "onScanned: "+barcode.rawValue);
-        if(Iname!=null) {
-            Log.d("aa", "onScanned: "+Iname);
-            defaulttext.setVisibility(View.INVISIBLE);
-            iteminfo.setVisibility(View.VISIBLE);
             Scanbutton.setOnClickListener(this);
             plus.setOnClickListener(this);
             minus.setOnClickListener(this);
-            Cart.addItems(Iname,Iprice);
-            Iname=null;
+        if(name != null){
+            viewDetail ();
+            defaulttext.setVisibility(View.INVISIBLE);
+            iteminfo.setVisibility(View.VISIBLE);
         }
+        else {
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage("Invalid Item. Try Again!");
+            alertDialog.show();
+
+        }
+
     }
 
 
@@ -165,8 +166,8 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_button:
-                String nameitem = title.getText().toString();
-                //cart.addItems(nameitem,Value);
+                quantity = Integer.valueOf (countitem.getText().toString());
+                cart.addItems(name,price,quantity);
                 title.setText("");
                 defaulttext.setVisibility(View.VISIBLE);
                 iteminfo.setVisibility(View.INVISIBLE);
@@ -189,11 +190,6 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         inflater.inflate(R.menu.menu_main, menu);
     }
 
-    public static void recieve(String name,Double price){
-        Iname = name;
-        Iprice = price;
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -208,6 +204,50 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    public void Request(String id){
+        OkHttpClient client = new OkHttpClient();
+        String url;
+        url = "http://Capstone.braronline.wmdd.ca/info?ID="+id;
+        ArrayList list = new ArrayList();
+        //Log.d("aa", "Request: "+url);
+        okhttp3.Request request = new okhttp3.Request.Builder().url(url).build();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client.newCall(request).execute();
+                    String text = response.body().string();
+
+                    JSONObject object = (JSONObject) new JSONTokener (text).nextValue();
+                    name =(object.get("item_name").toString());
+                    price = (Double)object.get("item_price");
+                    Log.d ("aa", "run: "+name);
+
+
+                } catch (IOException | JSONException e) {
+                    Log.d ("check", "run: "+e.toString ());
+
+                }
+            }
+
+        };
+
+        thread.start();
+
+    }
+
+    public void viewDetail(){
+
+        Log.d ("aa", "viewDetail: "+ name +"is for"+price);
+        title.setText(name);
+        detail.setText(String.valueOf(price));
+        iteminfo.setVisibility(View.VISIBLE);
+    }
+
+
 
 }
 

@@ -3,6 +3,9 @@ package com.smartmart.scanner;
 import android.app.Activity;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,10 +37,12 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
             .clientId(PAYPAL_CLIENT_ID);
 
     ArrayAdapter adapter;
-    ListView listView;
     private MenuItem menuItem;
     private MenuItem newmenuItem;
-    static ArrayList<String> itemlist = new ArrayList<>();
+    public static ArrayList<String> itemlist = new ArrayList<>();
+    RecyclerView cartlist;
+    public static ArrayList<String> pricelist = new ArrayList<>();
+    public static ArrayList<String> quantitylist = new ArrayList<>();
     static Double totalbill = 0.0;
 
 
@@ -49,14 +54,16 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-        listView = findViewById(R.id.list_view);
         Button payButton = findViewById(R.id.payButton);
         payButton.setOnClickListener(this);
         Button cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(this);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemlist);
-        listView.setAdapter(adapter);
 
+
+        cartlist = findViewById(R.id.cartlist);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemlist,pricelist,quantitylist);
+        cartlist.setLayoutManager(new LinearLayoutManager (this));
+        cartlist.setAdapter(recyclerAdapter);
         Log.d("test", itemlist.toString());
         Intent intent = new Intent(this,PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
@@ -86,7 +93,6 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
 
         if(itemId == R.id.edit)
         {
-//            message += "Search menu";
 
             menuItem.setVisible(false);
             newmenuItem.setVisible(true);
@@ -94,7 +100,6 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         }
         else if(itemId == R.id.save)
         {
-//            message += "Search menu";
 
             newmenuItem.setVisible(false);
             menuItem.setVisible(true);
@@ -114,11 +119,12 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         return true;
     }
 
-    public static void addItems(String item1, Double item2){
-        itemlist.add(item1+"                       "+item2);
+    public void addItems(String item1, Double item2,Integer item3){
+        itemlist.add(item1);
+        pricelist.add (String.valueOf ((item2*item3)));
+        quantitylist.add (item3.toString ());
         totalbill = totalbill+item2;
 
-        //Log.d("aa",totalbill.toString());
     }
 
     @Override
@@ -166,11 +172,12 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
                 super.onActivityResult(requestCode,resultCode,data);
             }
             else if(resultCode == Activity.RESULT_CANCELED){
-                Toast.makeText(this,"cancel",Toast.LENGTH_SHORT).show();
+                Log.d ("check", "onActivityResult: back-clicked");
             }
         }
         else if(resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-            Toast.makeText(this,"cancel",Toast.LENGTH_SHORT).show();
+            Log.d ("check", "onActivityResult: Extra invalid");
+
 
     }
 }
