@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import androidx.annotation.NonNull;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -58,6 +59,7 @@ import com.smartmart.scanner.R;
     private BottomNavigationView navBar;
     private static final int REQ_CODE = 9005;
     public static Boolean user = false;
+    public static GoogleSignInResult result =null;
      public View onCreateView(@NonNull LayoutInflater inflater,
                               ViewGroup container, Bundle savedInstanceState) {
          View root = inflater.inflate(R.layout.activity_login, container, false);
@@ -75,6 +77,7 @@ import com.smartmart.scanner.R;
          signIn.setOnClickListener(this);
          signOut.setOnClickListener(this);
          profSection.setVisibility(View.GONE);
+         signinsection.setVisibility (View.GONE);
 
 
 
@@ -95,7 +98,7 @@ import com.smartmart.scanner.R;
      @Override
      public void onStart() {
          super.onStart();
-         hideSystemUI ();
+         //hideSystemUI ();
          Log.d ("aa", "onStart: ");
          // Check if user is signed in (non-null) and update UI accordingly.
          //updateUI(currentUser);
@@ -123,7 +126,9 @@ import com.smartmart.scanner.R;
     }
     private void setSignIn(){
         Intent intent = mGoogleSignInClient.getSignInIntent();
+
         startActivityForResult(intent, REQ_CODE);
+
     }
     private void setSignOut(){
         mAuth.signOut();
@@ -173,7 +178,7 @@ import com.smartmart.scanner.R;
 
      private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
          // [START_EXCLUDE silent]
-         showProgressDialog();
+        // showProgressDialog();
          // [END_EXCLUDE]
 
          AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -211,7 +216,7 @@ import com.smartmart.scanner.R;
              try {
                  // Google Sign In was successful, authenticate with Firebase
                  GoogleSignInAccount account = task.getResult(ApiException.class);
-                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+                 result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                  firebaseAuthWithGoogle(account);
                  handleResult (result);
              } catch (ApiException e) {

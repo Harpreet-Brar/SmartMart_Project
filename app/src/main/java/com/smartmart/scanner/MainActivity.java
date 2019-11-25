@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-
+import com.smartmart.scanner.ui.account.AccountFragment;
 import java.util.ArrayList;
 import java.util.List;
 
