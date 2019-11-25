@@ -1,8 +1,9 @@
 package com.smartmart.scanner;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +14,7 @@ import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import com.smartmart.scanner.MainActivity;
-import com.smartmart.scanner.Cart;
+
 public class Request extends AppCompatActivity {
  public static ArrayList list;
  public static String price;
@@ -23,12 +23,14 @@ public class Request extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cart);
     }
     public static void Request(String id){
             OkHttpClient client = new OkHttpClient();
             String url;
             url = "http://Capstone.braronline.wmdd.ca/info?ID="+id;
             list = new ArrayList();
+        //Log.d("aa", "Request: "+url);
             okhttp3.Request request = new okhttp3.Request.Builder().url(url).build();
             Thread thread = new Thread() {
                 @Override
@@ -40,15 +42,16 @@ public class Request extends AppCompatActivity {
                         JSONObject object = (JSONObject) new JSONTokener(text).nextValue();
                         name =(object.get("item_name").toString());
                         price = ("$"+object.get("item_price").toString());
-                        p = (Double)object.get("item_price");
-                        MainActivity.title.setText(name);
-                        MainActivity.detail.setText(price);
+                       p = (Double)object.get("item_price");
+                        MainActivity.recieve(name,p);
 
 
-                        Cart.addItems(name,p);
+
+
 
 
                     } catch (IOException | JSONException e) {
+                        Log.d ("check", "run: "+e.toString ());
 
                     }
                 }

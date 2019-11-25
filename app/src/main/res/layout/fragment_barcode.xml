@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -16,7 +15,7 @@
 
         <fragment
             android:id="@+id/barcode_fragment"
-            android:name="com.smartmart.scanner_module.BarcodeReaderFragment"
+            android:name="com.smartmart.scanner.BarcodeReaderFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:auto_focus="true"
@@ -53,4 +52,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scan_detail" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

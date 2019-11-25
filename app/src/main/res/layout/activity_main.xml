@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/defaultview"
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -31,6 +30,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fm_container">
 
         <ImageView
+            android:contentDescription="@string/scanner"
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:layout_marginBottom="40dp"
-            android:text="Add items here"
+            android:text="@string/add_items_here"
             android:textAlignment="center"
             android:textColor="#ffffff"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,9 +57,9 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             app:layout_constraintVertical_bias="0.0" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/selectitem"
         android:layout_width="match_parent"
         android:layout_height="250dp"
@@ -75,7 +75,7 @@
 
         <TextView
             android:id="@+id/scan_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
             android:textAlignment="center"
@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="#ffffff"
-            android:text="-"
+            android:text="@string/minus"
             android:textAlignment="center"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="@id/countitem"
@@ -121,7 +121,7 @@
             android:enabled="false"
             android:inputType="number"
             android:outlineProvider="bounds"
-            android:text="0"
+            android:text="1"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="30sp"
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="#ffffff"
-            android:text="+"
+            android:text="@string/plus"
             android:textAlignment="center"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,7 +147,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="#d79d6d"
-            android:text="Confirm"
+            android:text="@string/confirm"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#ffffff"
@@ -156,7 +156,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

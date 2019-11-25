@@ -2,7 +2,7 @@ package com.smartmart.scanner;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,11 +24,7 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import okhttp3.Request;
-
 import static com.smartmart.scanner.client.PAYPAL_CLIENT_ID;
-import static com.paypal.android.sdk.bm.S;
-import static com.paypal.android.sdk.bm.s;
 
 
 public class Cart extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +39,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     private MenuItem newmenuItem;
     static ArrayList<String> itemlist = new ArrayList<>();
     static Double totalbill = 0.0;
+
 
     protected void onDestroy(){
         stopService(new Intent(this,PayPalService.class));
@@ -118,9 +115,10 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     }
 
     public static void addItems(String item1, Double item2){
-        itemlist.add(item1+"                                                                        "+item2);
-        totalbill = item2+totalbill;
-        Log.d("aa",totalbill.toString());
+        itemlist.add(item1+"                       "+item2);
+        totalbill = totalbill+item2;
+
+        //Log.d("aa",totalbill.toString());
     }
 
     @Override
@@ -137,7 +135,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     //new code
     private void processPayment(){
         //amount =  edtamount.getText().toString();
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(String.valueOf(0.67)), "CAD",
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(totalbill), "CAD",
                 "pay now" ,PayPalPayment.PAYMENT_INTENT_SALE);
 
         Intent intent = new Intent(this, PaymentActivity.class);
@@ -157,7 +155,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
                         String paymentDetails = Confirmation.toJSONObject(). toString(4);
 
                         startActivity(new Intent(this,PaymentDetails.class)
-                                .putExtra("PaymentDetails",paymentDetails)
+                                        .putExtra("PaymentDetails",paymentDetails)
                                 //.putExtra("paymentAmount",amount)
                         );
                     } catch (JSONException e) {

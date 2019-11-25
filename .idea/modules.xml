@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/SmartMart_Project.iml" filepath="$PROJECT_DIR$/SmartMart_Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/barcode-reader/barcode-reader.iml" filepath="$PROJECT_DIR$/barcode-reader/barcode-reader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/smartAouth/smartAouth.iml" filepath="$PROJECT_DIR$/smartAouth/smartAouth.iml" />
     </modules>
   </component>
 </project>

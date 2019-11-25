@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#ececed</color>
     <color name="colorAccent">#3d5d76</color>
     <color name="onpressed">#d79d6d</color>
+    <color name="scanner_line">#00ceff</color>
 </resources>

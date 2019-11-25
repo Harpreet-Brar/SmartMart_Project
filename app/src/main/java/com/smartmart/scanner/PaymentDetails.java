@@ -4,7 +4,8 @@ package com.smartmart.scanner;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class PaymentDetails extends AppCompatActivity {
             txtId.setText(response.getString("state"));
             txtId.setText(response.getString(String.format("$%",paymentAmount)));
 
+            Log.d("aa", "showDetails: Confirm");
 
         } catch (JSONException e) {
             e.printStackTrace();

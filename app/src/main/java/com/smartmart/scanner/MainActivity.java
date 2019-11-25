@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutCompat;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -19,14 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
-import com.smartmart.scanner.Request;
-import com.smartmart.scanner_module.BarcodeScannerActivity;
-import com.smartmart.scanner_module.BarcodeReaderFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +43,8 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
     static String reslt;
     private ConstraintLayout defaulttext;
     private ConstraintLayout iteminfo;
-
+    private static String Iname;
+    private static Double Iprice;
     Cart cart = new Cart();
     ArrayList<String> items = new ArrayList<>();
     Integer count = 0;
@@ -74,7 +72,6 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         defaulttext.setVisibility(View.VISIBLE);
 
 
-Request.Request("1");
         Scanbutton.setOnClickListener(this);
 
         //detail.setText(newList.get(1).toString());
@@ -117,8 +114,6 @@ Request.Request("1");
         if (requestCode == REQUEST && data != null) {
             Barcode barcode = data.getParcelableExtra(BarcodeScannerActivity.KEY_CAPTURED_BARCODE);
 
-            title.setText("On Activity Result");
-            detail.setText(barcode.rawValue);
             reslt = barcode.rawValue;
         }
 
@@ -127,12 +122,19 @@ Request.Request("1");
     @Override
     public void onScanned(Barcode barcode) {
         Request.Request(barcode.rawValue);
-
-        iteminfo.setVisibility(View.VISIBLE);
-        defaulttext.setVisibility(View.INVISIBLE);
-        Scanbutton.setOnClickListener(this);
-        plus.setOnClickListener(this);
-        minus.setOnClickListener(this);
+        title.setText(Iname);
+        detail.setText(String.valueOf(Iprice));
+        Log.d("aa", "onScanned: "+barcode.rawValue);
+        if(Iname!=null) {
+            Log.d("aa", "onScanned: "+Iname);
+            defaulttext.setVisibility(View.INVISIBLE);
+            iteminfo.setVisibility(View.VISIBLE);
+            Scanbutton.setOnClickListener(this);
+            plus.setOnClickListener(this);
+            minus.setOnClickListener(this);
+            Cart.addItems(Iname,Iprice);
+            Iname=null;
+        }
     }
 
 
@@ -187,6 +189,10 @@ Request.Request("1");
         inflater.inflate(R.menu.menu_main, menu);
     }
 
+    public static void recieve(String name,Double price){
+        Iname = name;
+        Iprice = price;
+    }
 
 
     @Override
