@@ -48,8 +48,9 @@ import com.smartmart.scanner.R;
  public class AccountFragment extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private ConstraintLayout profSection;
     private ConstraintLayout signinsection;
+    private ConstraintLayout loginscreen;
     private Button signOut;
-    private SignInButton signIn;
+    private Button signIn;
     private TextView Name,Email;
     private ImageView profilePic;
     private FirebaseAuth mAuth;
@@ -65,6 +66,7 @@ import com.smartmart.scanner.R;
          navBar = getActivity().findViewById(R.id.nav_view);
          profSection = root.findViewById(R.id.profileSection);
          signinsection = root.findViewById (R.id.signInSection);
+         loginscreen = root.findViewById (R.id.logscreen);
          signOut = root.findViewById(R.id.btn);
          signIn = root.findViewById(R.id.signIn);
          Name = root.findViewById(R.id.tv1);
@@ -73,6 +75,9 @@ import com.smartmart.scanner.R;
          signIn.setOnClickListener(this);
          signOut.setOnClickListener(this);
          profSection.setVisibility(View.GONE);
+
+
+
 
          GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                  .requestIdToken(getString(R.string.default_web_client_id))
@@ -85,11 +90,14 @@ import com.smartmart.scanner.R;
         return root;
     }
 
+
+
      @Override
      public void onStart() {
          super.onStart();
+         hideSystemUI ();
+         Log.d ("aa", "onStart: ");
          // Check if user is signed in (non-null) and update UI accordingly.
-         FirebaseUser currentUser = mAuth.getCurrentUser();
          //updateUI(currentUser);
          setSignIn ();
 
@@ -146,6 +154,7 @@ import com.smartmart.scanner.R;
     }
     private void updateUI (FirebaseUser user){
         if(user!=null){
+            showSystemUI ();
             profSection.setVisibility(View.VISIBLE);
             signinsection.setVisibility(View.GONE);
             navBar.setVisibility(View.VISIBLE);
@@ -153,6 +162,7 @@ import com.smartmart.scanner.R;
 
         }
         else {
+            hideSystemUI ();
             profSection.setVisibility(View.GONE);
             signinsection.setVisibility(View.VISIBLE);
             navBar.setVisibility(View.GONE);
@@ -212,6 +222,32 @@ import com.smartmart.scanner.R;
                  // [END_EXCLUDE]
              }
          }
+     }
+
+
+     private void hideSystemUI() {
+         // Enables regular immersive mode.
+         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+         View decorView = getActivity ().getWindow ().getDecorView();
+         decorView.setSystemUiVisibility(
+                 View.SYSTEM_UI_FLAG_IMMERSIVE
+                         // Set the content to appear under the system bars so that the
+                         // content doesn't resize when the system bars hide and show.
+                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                         // Hide the nav bar and status bar
+                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+     }
+
+     // Shows the system bars by removing all the flags
+// except for the ones that make the content appear under the system bars.
+     private void showSystemUI() {
+         View decorView = getActivity ().getWindow().getDecorView();
+         decorView.setSystemUiVisibility(
+                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
      }
 }
 
