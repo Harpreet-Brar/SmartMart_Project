@@ -4,9 +4,9 @@
     <string name="add">ADD</string>
     <string name="action_settings">CART</string>
     <string name="title_activity_bottom_nav">SMARTMART</string>
-    <string name="title_home">Home</string>
-    <string name="title_account">Account</string>
-    <string name="title_receipt">Receipt</string>
+    <string name="title_home">SMARTMART</string>
+    <string name="title_account">SMARTMART</string>
+    <string name="title_receipt">SMARTMART</string>
     <string name="title_scanner">SMARTMART</string>
     <string name="account_name">Name</string>
     <string name="account_email">Email@provider.com</string>
