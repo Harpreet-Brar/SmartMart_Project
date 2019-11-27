@@ -43,13 +43,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import com.smartmart.scanner.BaseActivity;
+import com.smartmart.scanner.Home;
 import com.smartmart.scanner.R;
 
 
  public class AccountFragment extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private ConstraintLayout profSection;
     private ConstraintLayout signinsection;
-    private ConstraintLayout loginscreen;
     private Button signOut;
     private Button signIn;
     private TextView Name,Email;
@@ -67,17 +67,12 @@ import com.smartmart.scanner.R;
 
          navBar = getActivity().findViewById(R.id.nav_view);
          profSection = root.findViewById(R.id.profileSection);
-         signinsection = root.findViewById (R.id.signInSection);
-         loginscreen = root.findViewById (R.id.logscreen);
          signOut = root.findViewById(R.id.btn);
-         signIn = root.findViewById(R.id.signIn);
          Name = root.findViewById(R.id.tv1);
          Email = root.findViewById(R.id.tv2);
          profilePic = root.findViewById(R.id.imageView);
-         signIn.setOnClickListener(this);
          signOut.setOnClickListener(this);
          profSection.setVisibility(View.GONE);
-         signinsection.setVisibility (View.GONE);
 
 
 
@@ -112,9 +107,6 @@ import com.smartmart.scanner.R;
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.signIn:
-                setSignIn();
-                break;
             case R.id.btn: {
                 setSignOut();
                 break;
@@ -126,7 +118,6 @@ import com.smartmart.scanner.R;
     }
     private void setSignIn(){
         Intent intent = mGoogleSignInClient.getSignInIntent();
-
         startActivityForResult(intent, REQ_CODE);
 
     }
@@ -139,6 +130,10 @@ import com.smartmart.scanner.R;
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         updateUI(null);
+
+                        Intent intent = new Intent (getContext (), Home.class);
+                        startActivity (intent);
+
                     }
                 });
     }
@@ -159,18 +154,10 @@ import com.smartmart.scanner.R;
     }
     private void updateUI (FirebaseUser user){
         if(user!=null){
-            showSystemUI ();
             profSection.setVisibility(View.VISIBLE);
-            signinsection.setVisibility(View.GONE);
             navBar.setVisibility(View.VISIBLE);
 
 
-        }
-        else {
-            hideSystemUI ();
-            profSection.setVisibility(View.GONE);
-            signinsection.setVisibility(View.VISIBLE);
-            navBar.setVisibility(View.GONE);
         }
     }
 
@@ -230,29 +217,6 @@ import com.smartmart.scanner.R;
      }
 
 
-     private void hideSystemUI() {
-         // Enables regular immersive mode.
-         // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-         // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-         View decorView = getActivity ().getWindow ().getDecorView();
-         decorView.setSystemUiVisibility(
-                 View.SYSTEM_UI_FLAG_IMMERSIVE
-                         // Set the content to appear under the system bars so that the
-                         // content doesn't resize when the system bars hide and show.
-                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                         // Hide the nav bar and status bar
-                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
-     }
 
-     // Shows the system bars by removing all the flags
-// except for the ones that make the content appear under the system bars.
-     private void showSystemUI() {
-         View decorView = getActivity ().getWindow().getDecorView();
-         decorView.setSystemUiVisibility(
-                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-     }
 }
 

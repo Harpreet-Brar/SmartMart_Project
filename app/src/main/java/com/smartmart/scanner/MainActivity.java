@@ -24,18 +24,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
 
 public class MainActivity extends Fragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener{
     private static final int REQUEST = 1208;
@@ -120,21 +122,10 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
     @Override
     public void onScanned(Barcode barcode) {
         Request(barcode.rawValue);
-        Log.d("aa", "onScanned: "+barcode.rawValue);
             Scanbutton.setOnClickListener(this);
             plus.setOnClickListener(this);
             minus.setOnClickListener(this);
-        if(name != null){
-            viewDetail ();
-            defaulttext.setVisibility(View.INVISIBLE);
-            iteminfo.setVisibility(View.VISIBLE);
-        }
-        else {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage("Invalid Item. Try Again!");
-            alertDialog.show();
 
-        }
 
     }
 
@@ -207,47 +198,32 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
 
 
 
-    public void Request(String id){
-        OkHttpClient client = new OkHttpClient();
-        String url;
-        url = "http://Capstone.braronline.wmdd.ca/info?ID="+id;
-        ArrayList list = new ArrayList();
-        //Log.d("aa", "Request: "+url);
-        okhttp3.Request request = new okhttp3.Request.Builder().url(url).build();
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Response response = client.newCall(request).execute();
-                    String text = response.body().string();
+    public void Request(String id) {
+        String url = "http://Capstone.braronline.wmdd.ca/info?ID=" + id;
 
-                    JSONObject object = (JSONObject) new JSONTokener (text).nextValue();
-                    name =(object.get("item_name").toString());
-                    price = (Double)object.get("item_price");
-                    Log.d ("aa", "run: "+name);
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
 
-
-                } catch (IOException | JSONException e) {
-                    Log.d ("check", "run: "+e.toString ());
-
-                }
-            }
-
-        };
-
-        thread.start();
-
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            title.setText(response.get ("item_name").toString());
+                            detail.setText(response.get ("item_price").toString());
+                            iteminfo.setVisibility (View.VISIBLE);
+                        } catch (JSONException e) {
+                            e.printStackTrace ();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Volley", error.toString());
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext ());
+        requestQueue.add(jsObjRequest);
     }
-
-    public void viewDetail(){
-
-        Log.d ("aa", "viewDetail: "+ name +"is for"+price);
-        title.setText(name);
-        detail.setText(String.valueOf(price));
-        iteminfo.setVisibility(View.VISIBLE);
-    }
-
-
 
 }
 
