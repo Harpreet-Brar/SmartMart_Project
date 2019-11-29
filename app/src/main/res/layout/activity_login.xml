@@ -62,6 +62,8 @@
             android:id="@+id/btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/borderview"
             android:text="logout"
             android:textColor="#3d5d76"

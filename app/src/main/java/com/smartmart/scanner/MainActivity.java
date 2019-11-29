@@ -158,6 +158,8 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         switch (view.getId()) {
             case R.id.scan_button:
                 quantity = Integer.valueOf (countitem.getText().toString());
+                name = title.getText ().toString ();
+                price = Double.valueOf (detail.getText ().toString ());
                 cart.addItems(name,price,quantity);
                 title.setText("");
                 defaulttext.setVisibility(View.VISIBLE);
@@ -181,6 +183,11 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
         inflater.inflate(R.menu.menu_main, menu);
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume ();
+//        Request ("1");
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

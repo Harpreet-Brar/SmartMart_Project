@@ -35,7 +35,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class Home extends Basehome implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private ConstraintLayout profSection;
     private ConstraintLayout signinsection;
-    private ConstraintLayout loginscreen;
     private Button signOut;
     private Button signIn;
     private TextView Name,Email;
@@ -54,7 +53,6 @@ public class Home extends Basehome implements View.OnClickListener, GoogleApiCli
         setContentView (R.layout.activity_home);
         profSection = findViewById(R.id.profileSection);
         signinsection = findViewById (R.id.signInSection);
-        loginscreen = findViewById (R.id.logscreen);
         signOut = findViewById(R.id.btn);
         signIn = findViewById(R.id.signIn);
         Name = findViewById(R.id.tv1);
@@ -75,6 +73,7 @@ public class Home extends Basehome implements View.OnClickListener, GoogleApiCli
         mAuth = FirebaseAuth.getInstance();
 
 
+        hideSystemUI ();
     }
 
 
@@ -131,14 +130,13 @@ public class Home extends Basehome implements View.OnClickListener, GoogleApiCli
     private void updateUI (FirebaseUser user){
         if(user!=null){
             showSystemUI ();
-            Intent intent = new Intent (getApplicationContext (),BottomNav.class);
+            Intent intent = new Intent (getApplicationContext (),MapsActivity.class);
             startActivity (intent);
         }
         else {
             hideSystemUI ();
             profSection.setVisibility(View.GONE);
             signinsection.setVisibility(View.VISIBLE);
-            navBar.setVisibility(View.GONE);
         }
     }
 
