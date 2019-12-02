@@ -15,6 +15,7 @@
 package com.smartmart.scanner;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -65,6 +66,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static androidx.appcompat.app.ActionBar.DISPLAY_USE_LOGO;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -100,6 +103,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
 
         // Set up the views
@@ -182,6 +186,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void getCurrentPlaceLikelihoods() {
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
                 Place.Field.LAT_LNG);
+        nearBy ();
 
         @SuppressWarnings("MissingPermission") final FindCurrentPlaceRequest request =
                 FindCurrentPlaceRequest.builder(placeFields).build();
@@ -244,9 +249,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ArrayList<Address> nearList = new ArrayList<Address> ();
         Geocoder geocoder = new Geocoder (this);
         try {
-            nearList = (ArrayList<Address>) geocoder.getFromLocationName ("superstore",6);
+            nearList = (ArrayList<Address>) geocoder.getFromLocationName ("subway",1);
 
-            Log.d ("check", "nearBy: "+mLastKnownLocation.getLatitude ());
+            Log.d ("check", "nearBy: "+nearList);
         } catch (IOException e) {
             e.printStackTrace ();
         }
@@ -283,6 +288,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
 
                         getCurrentPlaceLikelihoods();
+
 
                     }
                 });

@@ -128,13 +128,13 @@ public class Home extends Basehome implements View.OnClickListener, GoogleApiCli
         }
     }
     private void updateUI (FirebaseUser user){
+
+        hideSystemUI ();
         if(user!=null){
-            showSystemUI ();
             Intent intent = new Intent (getApplicationContext (),MapsActivity.class);
             startActivity (intent);
         }
         else {
-            hideSystemUI ();
             profSection.setVisibility(View.GONE);
             signinsection.setVisibility(View.VISIBLE);
         }

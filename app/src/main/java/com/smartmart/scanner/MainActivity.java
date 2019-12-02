@@ -171,9 +171,11 @@ public class MainActivity extends Fragment implements View.OnClickListener, Barc
                 countitem.setText(Integer.toString(xx));
                 break;
             case R.id.minuscount:
-                int countnew = Integer.parseInt(countitem.getText().toString());
-                int x = countnew+1;
-                countitem.setText(x);
+                int newcount = Integer.parseInt(countitem.getText().toString());
+                int x = newcount-1;
+                if(x>0) {
+                    countitem.setText (Integer.toString (x));
+                }
                 break;
 
         }
