@@ -15,12 +15,9 @@
 package com.smartmart.scanner;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,16 +26,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -49,8 +41,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -58,18 +48,20 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.gson.JsonArray;
 
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import static androidx.appcompat.app.ActionBar.DISPLAY_USE_LOGO;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    public static String placeSelected;
     private GoogleMap mMap;
     // New variables for Current Place Picker
     private static final String TAG = "MapsActivity";
@@ -104,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Log.d ("check", "nearBy: ");
 
 
         // Set up the views
@@ -116,6 +109,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
     }
+
+
 
 
     /**
@@ -167,10 +162,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(49.1779, 123.1204);
+        LatLng sydney = new LatLng(49.2827, 123.1207);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Vancouver"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         //mMap.setMyLocationEnabled(true);
@@ -181,82 +178,67 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Prompt the user for permission.
         getLocationPermission();
         pickCurrentPlace();
+
+
+
     }
+
 
     private void getCurrentPlaceLikelihoods() {
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS,
                 Place.Field.LAT_LNG);
-        nearBy ();
+
 
         @SuppressWarnings("MissingPermission") final FindCurrentPlaceRequest request =
                 FindCurrentPlaceRequest.builder(placeFields).build();
         Task<FindCurrentPlaceResponse> placeResponse = mPlacesClient.findCurrentPlace(request);
         placeResponse.addOnCompleteListener(this,
-                new OnCompleteListener<FindCurrentPlaceResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
-                        if (task.isSuccessful()) {
-                            FindCurrentPlaceResponse response = task.getResult();
-                            // Set the count, handling cases where less than 5 entries are returned.
-                            int count;
-                            if (response.getPlaceLikelihoods().size() < M_MAX_ENTRIES) {
-                                count = response.getPlaceLikelihoods().size();
-                            } else {
-                                count = M_MAX_ENTRIES;
-                            }
-
-                            int i = 0;
-                            mLikelyPlaceNames = new String[count];
-                            mLikelyPlaceAddresses = new String[count];
-                            mLikelyPlaceAttributions = new String[count];
-                            mLikelyPlaceLatLngs = new LatLng[count];
-
-                            for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                                Place currPlace = placeLikelihood.getPlace ();
-                                mLikelyPlaceNames[i] = currPlace.getName ();
-                                mLikelyPlaceAddresses[i] = currPlace.getAddress();
-                                mLikelyPlaceAttributions[i] = (currPlace.getAttributions() == null) ?
-                                        null : String.join(" ", currPlace.getAttributions());
-                                mLikelyPlaceLatLngs[i] = currPlace.getLatLng();
-
-                                String currLatLng = (mLikelyPlaceLatLngs[i] == null) ?
-                                        "" : mLikelyPlaceLatLngs[i].toString();
-
-                                Log.i(TAG, String.format("Place " + currPlace.getName()
-                                        + " has likelihood: " + placeLikelihood.getLikelihood()
-                                        + " at " + currLatLng));
-
-                                i++;
-                                if (i > (count - 1)) {
-                                    break;
-                                }
-                            }
-                            // Populate the ListView
-                            fillPlacesList();
-
+                task -> {
+                    if (task.isSuccessful()) {
+                        FindCurrentPlaceResponse response = task.getResult();
+                        // Set the count, handling cases where less than 5 entries are returned.
+                        int count;
+                        if (response.getPlaceLikelihoods().size() < M_MAX_ENTRIES) {
+                            count = response.getPlaceLikelihoods().size();
                         } else {
-                            Exception exception = task.getException();
-                            if (exception instanceof ApiException) {
-                                ApiException apiException = (ApiException) exception;
-                                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                            count = M_MAX_ENTRIES;
+                        }
+                        int i = 0;
+                        mLikelyPlaceNames = new String[count];
+                        mLikelyPlaceAddresses = new String[count];
+                        mLikelyPlaceAttributions = new String[count];
+                        mLikelyPlaceLatLngs = new LatLng[count];
+
+                        for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                            Place currPlace = placeLikelihood.getPlace ();
+                            mLikelyPlaceNames[i] = currPlace.getName ();
+                            mLikelyPlaceAddresses[i] = currPlace.getAddress();
+                            mLikelyPlaceAttributions[i] = (currPlace.getAttributions() == null) ?
+                                    null : String.join(" ", currPlace.getAttributions());
+                            mLikelyPlaceLatLngs[i] = currPlace.getLatLng();
+
+                            String currLatLng = (mLikelyPlaceLatLngs[i] == null) ?
+                                    "" : mLikelyPlaceLatLngs[i].toString();
+
+
+                            i++;
+                            if (i > (count - 1)) {
+                                break;
                             }
+                        }
+                        // Populate the ListView
+                        fillPlacesList();
+
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception instanceof ApiException) {
+                            ApiException apiException = (ApiException) exception;
+                            Log.e(TAG, "Place not found: " + apiException.getStatusCode());
                         }
                     }
                 });
     }
 
-    private void nearBy(){
-        ArrayList<Address> nearList = new ArrayList<Address> ();
-        Geocoder geocoder = new Geocoder (this);
-        try {
-            nearList = (ArrayList<Address>) geocoder.getFromLocationName ("subway",1);
-
-            Log.d ("check", "nearBy: "+nearList);
-        } catch (IOException e) {
-            e.printStackTrace ();
-        }
-
-    }
 
 
     /**
@@ -270,27 +252,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = location;
-                            Log.d(TAG, "Latitude: " + mLastKnownLocation.getLatitude());
-                            Log.d(TAG, "Longitude: " + mLastKnownLocation.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                        } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                        }
-
-                        getCurrentPlaceLikelihoods();
-
-
+                locationResult.addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = location;
+                        Log.d(TAG, "Latitude: " + mLastKnownLocation.getLatitude());
+                        Log.d(TAG, "Longitude: " + mLastKnownLocation.getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                new LatLng(mLastKnownLocation.getLatitude(),
+                                        mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                    } else {
+                        Log.d("check", "Current location is null. Using defaults.");
+                        mMap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                     }
+
+                    getCurrentPlaceLikelihoods();
+
+
                 });
             }
         } catch (Exception e) {
@@ -339,17 +318,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 markerSnippet = markerSnippet + "\n" + mLikelyPlaceAttributions[position];
             }
 
+            placeSelected = mLikelyPlaceAddresses[position];
+            Log.d ("test", "onItemClick: "+markerSnippet);
             mMap.addMarker(new MarkerOptions()
                     .title(mLikelyPlaceNames[position])
                     .position(markerLatLng)
                     .snippet(markerSnippet));
 
+
             // Position the map's camera at the location of the marker.
             mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
 
+            TimerTask timer = new TimerTask() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(getApplicationContext (), BottomNav.class);
+                    startActivity(i);
+                }
+            };
 
-            Intent intent = new Intent (getApplicationContext (),BottomNav.class);
-            startActivity (intent);
+            Timer splashScreen = new Timer();
+            splashScreen.schedule(timer, 3000);
         }
     };
 
@@ -365,5 +354,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         lstPlaces.setAdapter(placesAdapter);
         lstPlaces.setOnItemClickListener(listClickedHandler);
     }
+
+
 
 }

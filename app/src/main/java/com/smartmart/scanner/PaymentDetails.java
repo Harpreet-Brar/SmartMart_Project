@@ -39,9 +39,7 @@ public class PaymentDetails extends AppCompatActivity implements View.OnClickLis
             txtthank.setText("Thank You");
             txtStatus.setText("Payment Confirmed");
 
-
             Log.d("aa", "showDetails: Confirm");
-
 
     }
 

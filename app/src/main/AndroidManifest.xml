@@ -2,21 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.smartmart.scanner">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/toplogo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ReceiptDetail"></activity>
         <activity android:name=".Splash">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +27,22 @@
         </activity>
         <activity android:name=".PaymentDetails" />
         <activity android:name=".client" />
-        <activity android:name=".BarcodeScannerActivity" />
+        <activity android:name=".BarcodeScannerActivity" /><activity
+        android:name=".MapsViewActivity"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme.Base"></activity>
+        <activity
+            android:name=".Cafes"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Base"></activity>
+        <activity
+            android:name=".StoreSearchActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Base"></activity>
         <activity
             android:name=".BottomNav"
             android:label="@string/title_activity_bottom_nav" />
-        <activity android:name=".Home">
-        </activity>
+        <activity android:name=".Home"></activity>
         <activity android:name=".Cart" />
         <activity android:name=".MainActivity" />
 
@@ -39,7 +50,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MapsActivity"></activity>
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".Basehome" />
     </application>
 
 </manifest>

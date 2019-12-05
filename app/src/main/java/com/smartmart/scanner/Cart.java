@@ -3,19 +3,32 @@ package com.smartmart.scanner;
 import android.app.Activity;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -23,6 +36,7 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,7 +49,8 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(PAYPAL_CLIENT_ID);
 
-    ArrayAdapter adapter;
+    private ConstraintSet constraintSet = new ConstraintSet();
+
     private MenuItem menuItem;
     private MenuItem newmenuItem;
     public static ArrayList<String> itemlist = new ArrayList<>();
@@ -44,7 +59,12 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     public static ArrayList<String> quantitylist = new ArrayList<>();
     public static ArrayList<String> editlist = new ArrayList<String>();
     static Double totalbill = 0.0;
+    static Double totalgst = 0.0;
+    static Double totalpst = 0.0;
+    static Double totalgrand = 0.0;
+
     private ListView editView;
+    private TextView gst,pst,total;
 
 
     protected void onDestroy(){
@@ -57,11 +77,22 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_cart);
         Button payButton = findViewById(R.id.payButton);
         payButton.setOnClickListener(this);
+        Button confirmButton = findViewById(R.id.confirmpay);
+        confirmButton.setOnClickListener(this);
         Button cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(this);
         editView = findViewById (R.id.editviewList);
         editView.setVisibility (View.INVISIBLE);
+        gst = findViewById (R.id.gstbtn);
+        pst = findViewById (R.id.pstbtn);
+        total = findViewById (R.id.totalbtn);
 
+        totalgst = (totalbill/100)*5;
+        totalpst = (totalbill/100)*7;
+        totalgrand = (totalbill + totalgst + totalpst);
+        gst.setText("GST  %5  :  "+ String.format ("%.2f",totalgst));
+        pst.setText("PST  %7  :  "+ String.format ("%.2f",totalpst));
+        total.setText("Total :  "+ String.format ("%.2f",totalgrand));
         cartlist = findViewById(R.id.cartlist);
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemlist,pricelist,quantitylist);
         cartlist.setLayoutManager(new LinearLayoutManager (this));
@@ -70,11 +101,16 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
         startService(intent);
 
-        payButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                processPayment();
-            }
+        payButton.setOnClickListener(view -> processPayment());
+        confirmButton.setOnClickListener(view -> {
+            ConstraintLayout constraint = findViewById(R.id.cartviewcart);
+            constraintSet.clone(Cart.this, R.layout.activity_confirm);
+            Transition transition = new ChangeBounds ();
+            transition.setInterpolator(new AnticipateOvershootInterpolator (1.0f));
+            transition.setDuration(1000);
+
+            TransitionManager.beginDelayedTransition(constraint, transition);
+            constraintSet.applyTo(constraint);
         });
 
 
@@ -87,29 +123,31 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
                 android.R.layout.simple_list_item_1, editlist);
         editView.setAdapter(adapter);
 
-        editView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(1000).alpha(0)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                itemlist.remove (position);
-                                pricelist.remove (position);
-                                quantitylist.remove (position);
-                                editlist.remove(item);
-                                RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemlist,pricelist,quantitylist);
-                                cartlist.setLayoutManager(new LinearLayoutManager (getApplicationContext ()));
-                                cartlist.setAdapter(recyclerAdapter);
-                                adapter.notifyDataSetChanged();
-                                view.setAlpha(1);
-                            }
-                        });
-            }
-
+        editView.setOnItemClickListener((parent, view, position, id) -> {
+            final String item = (String) parent.getItemAtPosition(position);
+            view.animate().setDuration(1000).alpha(0)
+                    .withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            itemlist.remove (position);
+                            totalbill -= Double.valueOf (pricelist.get (position));
+                            pricelist.remove (position);
+                            quantitylist.remove (position);
+                            editlist.remove(item);
+                            RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemlist,pricelist,quantitylist);
+                            cartlist.setLayoutManager(new LinearLayoutManager (getApplicationContext ()));
+                            cartlist.setAdapter(recyclerAdapter);
+                            adapter.notifyDataSetChanged();
+                            view.setAlpha(1);
+                            totalgst = (totalbill/100)*5;
+                            totalpst = (totalbill/100)*7;
+                            totalgrand = (totalbill + totalgst + totalpst);
+                            gst.setText("GST  %5  :  "+ String.format ("%.2f",totalgst));
+                            pst.setText("PST  %7  :  "+ String.format ("%.2f",totalpst));
+                            total.setText("Total :  "+ String.format ("%.2f",totalgrand));
+                            total.setText ("Total : " + String.format ("%f",totalbill));
+                        }
+                    });
         });
     }
 
@@ -178,7 +216,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
     //new code
     private void processPayment(){
         //amount =  edtamount.getText().toString();
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(totalbill), "CAD",
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(totalgrand), "CAD",
                 "pay now" ,PayPalPayment.PAYMENT_INTENT_SALE);
 
         Intent intent = new Intent(this, PaymentActivity.class);
@@ -216,6 +254,27 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
             Log.d ("check", "onActivityResult: Extra invalid");
 
 
+    }
+
+    public void addReceipt() {
+        String url = "http://Capstone.braronline.wmdd.ca/info?ID=";
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d ("check", "onResponse: "+response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Volley", error.toString());
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsObjRequest);
     }
 }
 

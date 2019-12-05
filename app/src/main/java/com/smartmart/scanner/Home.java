@@ -131,7 +131,7 @@ public class Home extends Basehome implements View.OnClickListener, GoogleApiCli
 
         hideSystemUI ();
         if(user!=null){
-            Intent intent = new Intent (getApplicationContext (),MapsActivity.class);
+            Intent intent = new Intent (getApplicationContext (),StoreSearchActivity.class);
             startActivity (intent);
         }
         else {

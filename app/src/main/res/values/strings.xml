@@ -9,6 +9,10 @@
     <string name="title_receipt">SMARTMART</string>
     <string name="title_scanner">SMARTMART</string>
     <string name="account_name">Name</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="error_api">Error fetching nearby restaurants.</string>
     <string name="account_email">Email@provider.com</string>
     <string name="account_logout">LOGOUT</string>
     <string name="account_image_description">Profile picture of user</string>
