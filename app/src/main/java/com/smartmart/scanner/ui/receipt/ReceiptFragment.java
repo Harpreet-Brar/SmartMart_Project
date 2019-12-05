@@ -131,4 +131,5 @@ public class ReceiptFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
+
 }

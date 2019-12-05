@@ -20,19 +20,9 @@ public class StoreSearchActivity extends TabActivity {
         Intent intentMaps = new Intent ().setClass(this, MapsViewActivity.class);
         TabSpec tabSpecMap = tabHost
                 .newTabSpec("Map View")
-                .setIndicator("", resources.getDrawable(R.drawable.baseline_near_me_black_18dp))
+                .setIndicator("")
                 .setContent(intentMaps);
-
-        // Apple tab
-        Intent intentList = new Intent ().setClass(this, Cafes.class);
-        TabSpec tabSpecList = tabHost
-                .newTabSpec("List View")
-                .setIndicator("", resources.getDrawable(R.drawable.baseline_local_dining_black_18dp))
-                .setContent(intentList);
-
-        // add all tabs
         tabHost.addTab(tabSpecMap);
-        tabHost.addTab(tabSpecList);
 
         //set Windows tab as default (zero based)
         tabHost.setCurrentTab(2);

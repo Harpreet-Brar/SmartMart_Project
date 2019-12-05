@@ -253,9 +253,7 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
         else if(resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
             Log.d ("check", "onActivityResult: Extra invalid");
 
-
     }
-
     public void addReceipt() {
         String url = "http://Capstone.braronline.wmdd.ca/info?ID=";
 

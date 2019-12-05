@@ -19,8 +19,11 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +52,8 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,10 +77,10 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
     private com.google.android.gms.location.LocationListener listener;
     private long UPDATE_INTERVAL = 2 * 10000000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000000000; /* 20 sec */
-
+    private ListView Maplist;
     private LocationManager locationManager;
     private boolean isPermission;
-
+    private ArrayList<String> Storelist = new ArrayList<> ();
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<> ();
     private ArrayList<String> permissions = new ArrayList<> ();
@@ -85,7 +90,6 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
 
     String latLngString;
     LatLng latLng;
-    EditText editText;
     Button button;
     List<PlacesPOJO.CustomA> results;
 
@@ -96,9 +100,8 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
         setContentView(R.layout.activity_maps_view);
 
         apiService = APIClient.getClient().create(ApiInterface.class);
-        editText = (EditText) findViewById(R.id.editText);
         button = (Button) findViewById(R.id.button);
-
+        Maplist = findViewById (R.id.maplist);
         if (requestSinglePermission()) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -218,7 +221,7 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
 
         if (latLng != null) {
             mMap.addMarker(new MarkerOptions ().position(latLng).title("Marker in Current Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
 
         SearchData x = SearchData.getInstance();
@@ -233,10 +236,12 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
         mMap.clear();
         for (StoreModel s : stores) {
             mMap.addMarker(new MarkerOptions ().position(new LatLng (Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name));
+            Storelist.add (s.name);
         }
         if(latLng!=null) {
             mMap.addMarker(new MarkerOptions ().position(latLng).title("Marker in Current Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+            populate ();
         }
     }
 
@@ -319,13 +324,7 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     public void onSearch(View v){
-        editText = (EditText) findViewById(R.id.editText);
-        String s = editText.getText().toString().trim();
-        if (s == null || s.length() == 0) {
-            showSnackBar("Please enter text.", true);
-
-        } else
-            fetchStores(s);
+            fetchStores("grocery");
     }
 
     @Override
@@ -414,7 +413,7 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
         }
 
         if (checkLocation()) {
-            Call<PlacesPOJO.Root> call = apiService.doPlaces("restaurant", latLngString, businessName, true, "distance", APIClient.GOOGLE_PLACE_API_KEY);
+            Call<PlacesPOJO.Root> call = apiService.doPlaces("groceries", latLngString, businessName, true, "distance", APIClient.GOOGLE_PLACE_API_KEY);
             call.enqueue(new Callback<PlacesPOJO.Root>() {
                 @Override
                 public void onResponse(Call<PlacesPOJO.Root> call, Response<PlacesPOJO.Root> response) {
@@ -439,7 +438,6 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
                                 if (storeModels.size() == 10 || storeModels.size() == results.size()) {
                                     x.setStores(storeModels);
                                     int size = storeModels.size();
-                                    showSnackBar("Found " + size + " cafes.", false);
                                     addMarkers(storeModels);
                                 }
                             }
@@ -488,4 +486,20 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+    public void populate(){
+        ArrayAdapter<String> placesAdapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Storelist);
+        Maplist.setAdapter(placesAdapter);
+        Maplist.setOnItemClickListener(listClickedHandler);
+    }
+    private AdapterView.OnItemClickListener listClickedHandler = new AdapterView.OnItemClickListener() {
+
+        public void onItemClick(AdapterView parent, View v, int position, long id) {
+
+            Intent i = new Intent (getApplicationContext (), BottomNav.class);
+            i.putExtra ("Title", Storelist.get (position));
+            startActivity (i);
+        }
+    };
+
 }
