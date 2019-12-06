@@ -236,7 +236,7 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
         mMap.clear();
         for (StoreModel s : stores) {
             mMap.addMarker(new MarkerOptions ().position(new LatLng (Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name));
-            Storelist.add (s.name);
+            Storelist.add (s.name + "   " +s.address);
         }
         if(latLng!=null) {
             mMap.addMarker(new MarkerOptions ().position(latLng).title("Marker in Current Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
@@ -491,6 +491,7 @@ public class MapsViewActivity extends FragmentActivity implements OnMapReadyCall
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Storelist);
         Maplist.setAdapter(placesAdapter);
         Maplist.setOnItemClickListener(listClickedHandler);
+        Maplist.setTextAlignment (View.TEXT_ALIGNMENT_CENTER);
     }
     private AdapterView.OnItemClickListener listClickedHandler = new AdapterView.OnItemClickListener() {
 

@@ -145,7 +145,6 @@ public class Cart extends AppCompatActivity implements View.OnClickListener {
                             gst.setText("GST  %5  :  "+ String.format ("%.2f",totalgst));
                             pst.setText("PST  %7  :  "+ String.format ("%.2f",totalpst));
                             total.setText("Total :  "+ String.format ("%.2f",totalgrand));
-                            total.setText ("Total : " + String.format ("%f",totalbill));
                         }
                     });
         });
